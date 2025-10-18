@@ -121,7 +121,7 @@ async function obtenerCursos() {
 
             // Botón Editar
             const editButton = document.createElement('button');
-            editButton.innerHTML = '<i class="fas fa-edit"></i>'; 
+            editButton.textContent = 'Editar';
             editButton.classList.add('btn', 'btn-info', 'btn-sm', 'me-2');
             editButton.title = 'Editar';
             editButton.onclick = () => cargarParaEdicion(curso.id_curso); 
@@ -129,7 +129,7 @@ async function obtenerCursos() {
 
             // Botón Eliminar
             const deleteButton = document.createElement('button');
-            deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>'; 
+            deleteButton.textContent = 'Eliminar';
             deleteButton.classList.add('btn', 'btn-danger', 'btn-sm');
             deleteButton.title = 'Eliminar';
             deleteButton.onclick = () => eliminarCurso(curso.id_curso, curso.titulo);
@@ -165,8 +165,7 @@ async function cargarParaEdicion(id_curso) {
         await obtenerDocentes(curso.id_docente);
 
         // Actualizar botón de Guardar/Actualizar
-        btnGuardar.innerHTML = '<i class="fas fa-sync-alt me-1"></i> Actualizar';
-        btnGuardar.classList.remove('btn-primary');
+        btnGuardar.innerHTML = 'Actualizar';
         btnGuardar.classList.add('btn-warning');
 
     } catch (error) {
@@ -218,31 +217,72 @@ formularioCurso.addEventListener('submit', async (event) => {
 
 // 4. ELIMINAR CURSO (DELETE)
 async function eliminarCurso(id, titulo_curso) {
-    if (!confirm(`¿Estás seguro de ELIMINAR el curso "${titulo_curso}" (ID: ${id})?`)) {
-        return;
-    }
-    try {
-        const response = await fetch(`${API_URL_CURSOS}/${id}`, {
-            method: 'DELETE',
-        });
-        if (!response.ok) throw new Error('Error al eliminar el curso');
-        
-        const result = await response.json();
-        alert(result.message);
-        obtenerCursos(); 
-        resetFormulario();
-    } catch (error) {
-        console.error("Error al eliminar curso:", error);
-        alert('Error al eliminar el curso. Verifique si hay dependencias.');
-    }
-}
+    
+    // Configuración para los botones de SweetAlert usando clases de Bootstrap
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: "btn btn-danger mx-2", // Rojo para eliminar
+            cancelButton: "btn btn-secondary" // Gris para cancelar
+        },
+        buttonsStyling: false
+    });
 
+    // Muestra el modal de confirmación
+    swalWithBootstrapButtons.fire({
+        title: "¿Estás seguro?",
+        text: `Estás a punto de eliminar el curso: "${titulo_curso}". ¡Esta acción no se puede revertir!`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Sí, ¡Eliminar!",
+        cancelButtonText: "No, cancelar",
+        reverseButtons: true
+    }).then(async (result) => { 
+        
+        if (result.isConfirmed) {
+            try {
+                const response = await fetch(`${API_URL_CURSOS}/${id}`, {
+                    method: 'DELETE',
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Error al eliminar el curso');
+                }                          
+                await response.json(); 
+                swalWithBootstrapButtons.fire({
+                    title: "¡Eliminado!",
+                    text: `El curso "${titulo_curso}" ha sido eliminado.`,
+                    icon: "success"
+                });
+                
+                obtenerCursos(); 
+                resetFormulario();
+                
+            } catch (error) {
+                console.error("Error al eliminar curso:", error);
+                
+                // Mostrar mensaje de error (puede ser por dependencias en la BD)
+                swalWithBootstrapButtons.fire({
+                    title: "Error",
+                    text: `No se pudo eliminar el curso. Verifique si hay dependencias.`,
+                    icon: "error"
+                });
+            }
+            
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+            swalWithBootstrapButtons.fire({
+                title: "Cancelación",
+                text: "El curso está a salvo :)",
+                icon: "info"
+            });
+        }
+    });
+}
 function resetFormulario() {
     formularioCurso.reset();
     idCursoInput.value = '';
 
     // Reestablecer botón
-    btnGuardar.innerHTML = '<i class="fas fa-save me-1"></i> Guardar';
+    btnGuardar.innerHTML = 'Guardar';
     btnGuardar.classList.remove('btn-warning');
     btnGuardar.classList.add('btn-primary');
 

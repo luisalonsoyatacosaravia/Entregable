@@ -1,0 +1,43 @@
+/* public/css/cursos.css */
+
+/* Estilo para replicar la barra superior verde */
+.navbar-header-custom {
+    background-color: #28a745; /* Verde Bootstrap 'success' */
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+/* Estilo para el título principal "Gestion de Cursos" */
+.navbar-brand {
+    font-weight: bold;
+    color: #343a40; /* Color oscuro */
+}
+
+/* Estilo para la cabecera de la tabla (image_c48100.jpg) */
+#tabla-cursos thead tr {
+    background-color: #343a40 !important; /* Cabecera oscura */
+    color: white;
+}
+
+/* Ajustes de alineación para las celdas de la tabla */
+#tabla-cursos th.text-center, 
+#tabla-cursos td.text-center {
+    text-align: center !important;
+}
+
+#tabla-cursos th.text-end, 
+#tabla-cursos td.text-end {
+    text-align: right !important;
+}
+
+/* Ajuste de color para los botones de acción para que coincida con las imágenes */
+.btn-info {
+    /* Color para el botón Editar */
+    --bs-btn-bg: #17a2b8; 
+    --bs-btn-border-color: #17a2b8;
+}
+.btn-danger {
+    /* Color para el botón Eliminar */
+    --bs-btn-bg: #dc3545; 
+    --bs-btn-border-color: #dc3545;
+}

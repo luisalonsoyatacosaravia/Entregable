@@ -1,4 +1,4 @@
-// routes/subcategoriaRoutes.js
+
 const express = require('express');
 const router = express.Router();
 const subcategoriaController = require('../controllers/subcategoriaController');

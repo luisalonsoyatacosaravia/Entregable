@@ -19,7 +19,7 @@ app.use(cors({
     credentials: true
 }));
 
-// Middlewares para procesar JSON y datos de formulario
+
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 
@@ -37,7 +37,7 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'cursos.html'));
 });
 
-// Iniciar el servidor
+
 app.listen(PORT, () => {
     console.log(`Servidor iniciado en http://localhost:${PORT}`);
 });

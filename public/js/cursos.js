@@ -281,12 +281,12 @@ function resetFormulario() {
     formularioCurso.reset();
     idCursoInput.value = '';
 
-    // Reestablecer botón
+  
     btnGuardar.innerHTML = 'Guardar';
     btnGuardar.classList.remove('btn-warning');
     btnGuardar.classList.add('btn-primary');
 
-    // Recargar selects al estado inicial
+    
     obtenerCategorias();
     obtenerSubcategoriasPorCategoria(null);
     obtenerDocentes();
